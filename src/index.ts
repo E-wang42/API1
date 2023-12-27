@@ -6,6 +6,7 @@ import compression from "compression";
 import cors from "cors";
 import mongoose, { mongo } from "mongoose";
 import { error } from "console";
+import routes from "./routes";
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(
 app.use(compression());
 app.use(cookieParser());
 app.use(bodyParser.json());
+app.use("/", routes());
 
 const PORT: number | string = process.env.PORT || 8080;
 const server = http.createServer(app);

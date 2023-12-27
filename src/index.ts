@@ -4,9 +4,8 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import compression from "compression";
 import cors from "cors";
-import mongoose, { mongo } from "mongoose";
-import { error } from "console";
-import routes from "./routes";
+import mongoose from "mongoose";
+import router from "./routes";
 
 const app = express();
 
@@ -19,16 +18,26 @@ app.use(
 app.use(compression());
 app.use(cookieParser());
 app.use(bodyParser.json());
-app.use("/", routes());
 
 const PORT: number | string = process.env.PORT || 8080;
 const server = http.createServer(app);
+const MONGO_URL = "mongodb://localhost:27017/userAuth";
+
+mongoose.Promise = Promise;
+
+try {
+  async function connectDB() {
+    await mongoose.connect(MONGO_URL, {});
+    console.log("MongoDB connected");
+  }
+  connectDB();
+} catch (err) {
+  console.error(err);
+}
+
+mongoose.connection.on("eRRor", (error: Error) => console.log(error));
+app.use("/", router());
+
 server.listen(PORT, (): void => {
   console.log(`***SERVER RUNNING ON PORT ${PORT}***`);
 });
-
-const MONGO_URL = "mongodb://localhost:27017";
-
-mongoose.Promise = Promise;
-mongoose.connect(MONGO_URL);
-mongoose.connection.on("eRRor", (error: Error) => console.log(error));

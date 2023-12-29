@@ -24,7 +24,6 @@ const server = http.createServer(app);
 const MONGO_URL = "mongodb://localhost:27017/userAuth";
 
 mongoose.Promise = Promise;
-
 try {
   async function connectDB() {
     await mongoose.connect(MONGO_URL, {});
@@ -34,7 +33,6 @@ try {
 } catch (err) {
   console.error(err);
 }
-
 mongoose.connection.on("eRRor", (error: Error) => console.log(error));
 app.use("/", router());
 

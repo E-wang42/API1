@@ -2,6 +2,15 @@ import express from "express";
 import { createUser, getUserByEmail } from "../models/users";
 import { random, authentication } from "../helpers";
 
+export const login = async (req: express.Request, res: express.Response) => {
+  try {
+    const login = null;
+  } catch (err) {
+    console.error(err);
+    return res.sendStatus(400);
+  }
+};
+
 export const register = async (req: express.Request, res: express.Response) => {
   try {
     const { email, password, username } = req.body;

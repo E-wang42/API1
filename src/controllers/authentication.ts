@@ -4,7 +4,29 @@ import { random, authentication } from "../helpers";
 
 export const login = async (req: express.Request, res: express.Response) => {
   try {
-    const login = null;
+    const [email, password] = req.body;
+    if (!email || !password) {
+      return res.sendStatus(400);
+    }
+
+    const user = await getUserByEmail(email).select(
+      "+authentication.salt +authentication.password"
+    );
+
+    if (!user) {
+      return res.sendStatus(400);
+    }
+    const expectedHash = authentication(user.authentication.salt, password);
+    if (user.authentication.password !== expectedHash) {
+      return res.sendStatus(403);
+    }
+    const salt = random();
+    user.authentication?.sessionToken = authentication(
+      salt,
+      user_id.toString()
+    );
+
+    await user.save();
   } catch (err) {
     console.error(err);
     return res.sendStatus(400);
